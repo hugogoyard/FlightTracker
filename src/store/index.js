@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as $ from 'jquery';
+// import * as $ from 'jquery';
 
 Vue.use(Vuex)
 
 const state = {
   planes: [],
   previousTimestamp: null,
-  selected: null,
 }
 
 const mutations = {
@@ -19,31 +18,27 @@ const mutations = {
 const getters = {
   planes: state => state.planes,
   previousTimestamp: state => state.previousTimestamp,
-  selected: state => state.selected,
 }
 
 const actions = {
-  addPlanes: (store, plane) => {
-    store.commit('ADD_PLANE', plane)
-  },
-  updatePlanes: (store) => {
-    $.ajax('https://hugogoyard:kehuyo39@opensky-network.org/api/states/all',{
-      type: 'GET',
-      dataType: 'json',
-      timeout: 100000
-    }).done(function (data) {
-      if (state.previousTimestamp !== data['time'] && state.previousTimestamp <= data['time']) {
-        state.previousTimestamp = data['time']
+  updatePlanes: (store, url) => {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.responseType = 'json';
+    xhr.send()
+    xhr.onload = function() {
+      let obj = xhr.response;
+      if (state.previousTimestamp !== obj['time'] && state.previousTimestamp <= obj['time']) {
+        state.previousTimestamp = obj['time']
         state.planes.splice(0, state.planes.length)
-        store.commit('ADD_PLANE', data['states'])
+        if (obj['states'] != null || typeof obj['states'] !== undefined) {
+          for (let i = 0; i < obj['states'].length; i++) {
+            store.commit('ADD_PLANE', obj['states'][i])
+          }
+        }
       }
-    }).fail(function (xhr, ajaxOptions, thrownError) {
-      console.log('An error has been found : ' + thrownError);
-    })
+    }
   },
-  setSelected: (store, airplane) => {
-    store.commit('IS_SELECTED', airplane)
-  }
 }
 
 export default new Vuex.Store({

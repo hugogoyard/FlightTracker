@@ -1,37 +1,38 @@
 <template>
   <div id="home">
     <GmapMap
-        id="map"
-        :center="{ lat: 46, lng: 2 }"
-        :options="option"
+      id="map"
+      ref="map"
+      :center="{ lat: 46, lng: 2 }"
+      :options="option"
     >
       <GmapMarker
-          v-for="(plane) in planes[0]"
-          :key="plane[0]"
-          :position="{lat: parseFloat(plane[6]), lng: parseFloat(plane[5])}"
-          :clickable="true"
-          :title="plane[1]"
-          :icon="{
-            url: getIconOrientedUrl(plane[10]),
-            anchor: {x: 12.5, y: 12.5},
-            scaledSize: {width: 25, height: 25, f: 'px', b: 'px'},
-          }"
+        v-for="(plane) in planes"
+        :key="plane[0]"
+        :position="{lat: parseFloat(plane[6]), lng: parseFloat(plane[5])}"
+        :clickable="true"
+        :title="plane[1]"
+        :icon="{
+          url: getIconOrientedUrl(plane[10]),
+          anchor: {x: 12.5, y: 12.5},
+          scaledSize: {width: 25, height: 25, f: 'px', b: 'px'},
+        }"
       />
     </GmapMap>
   </div>
 </template>
-
 <script>
-import { styles } from '../map/mapStyle'
 import { iconManager } from '../map/markerIcon'
 import vuex from 'vuex'
+import { styles } from "../map/mapStyle";
 export default {
   name: 'Home',
   data () {
     return {
+      map: null,
       option: {
         minZoom: 2,
-        zoom: 8,
+        zoom: 6,
         tilt: 0,
         backgroundColor: '#121415',
         zoomControl: false,
@@ -57,18 +58,35 @@ export default {
     }
   },
   methods: {
-    ...vuex.mapActions(['addPlanes','updatePlanes','setSelected']),
+    ...vuex.mapActions(['updatePlanes']),
     getIconOrientedUrl(angle) {
       return iconManager.getIconOrientedUrl(angle)
+    },
+    changeUrl(northEast, southWest) {
+    // changeUrl() {
+      const url = 'https://opensky-network.org/api/states/all'
+        + '?lamin='+southWest.lat()
+        + '&lomin='+southWest.lng()
+        + '&lamax='+northEast.lat()
+        + '&lomax='+northEast.lng()
+        // + '?extended=false'
+      this.updatePlanes(url)
     }
   },
   computed: {
-    ...vuex.mapGetters(['planes', 'selected']),
+    ...vuex.mapGetters(['planes']),
   },
   mounted: function () {
     window.setInterval(() => {
-      this.updatePlanes()
-    }, 5000)
+      this.$nextTick(() => {
+        this.$refs.map.$mapPromise.then((map) => {
+          var bounds = map.getBounds();
+          var screenNorthEast = bounds.getNorthEast(); // LatLng of the north-east screen corner
+          var screenSouthWest = bounds.getSouthWest(); // LatLng of the south-west screen corner
+          this.changeUrl(screenNorthEast, screenSouthWest)
+        });
+      })
+    }, 10000)
   }
 }
 </script>
