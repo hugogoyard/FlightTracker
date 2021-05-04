@@ -6,18 +6,24 @@
       :center="{ lat: 46, lng: 2 }"
       :options="option"
     >
-      <PlaneMarker></PlaneMarker>
+      <plane-marker></plane-marker>
+      <night-overlays></night-overlays>
     </GmapMap>
   </div>
 </template>
 <script>
 import { styles } from "../assets/map/mapStyle";
-import PlaneMarker from "../components/map/PlaneMarker";
 import vuex from "vuex";
+/*
+COMPONENTS
+ */
+import PlaneMarker from "../components/map/PlaneMarker";
+import nightOverlays from "../components/map/nightOverlays";
 export default {
   name: 'Home',
   components: {
     PlaneMarker,
+    nightOverlays,
   },
   data () {
     return {
