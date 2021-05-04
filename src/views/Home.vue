@@ -6,27 +6,19 @@
       :center="{ lat: 46, lng: 2 }"
       :options="option"
     >
-      <GmapMarker
-        v-for="(plane) in planes"
-        :key="plane[0]"
-        :position="{lat: parseFloat(plane[6]), lng: parseFloat(plane[5])}"
-        :clickable="true"
-        :title="plane[1]"
-        :icon="{
-          url: getIconOrientedUrl(plane[10]),
-          anchor: {x: 12.5, y: 12.5},
-          scaledSize: {width: 25, height: 25, f: 'px', b: 'px'},
-        }"
-      />
+      <PlaneMarker></PlaneMarker>
     </GmapMap>
   </div>
 </template>
 <script>
-import { iconManager } from '../map/markerIcon'
-import vuex from 'vuex'
-import { styles } from "../map/mapStyle";
+import { styles } from "../assets/map/mapStyle";
+import PlaneMarker from "../components/map/PlaneMarker";
+import vuex from "vuex";
 export default {
   name: 'Home',
+  components: {
+    PlaneMarker,
+  },
   data () {
     return {
       map: null,
@@ -59,22 +51,14 @@ export default {
   },
   methods: {
     ...vuex.mapActions(['updatePlanes']),
-    getIconOrientedUrl(angle) {
-      return iconManager.getIconOrientedUrl(angle)
-    },
     changeUrl(northEast, southWest) {
-    // changeUrl() {
       const url = 'https://opensky-network.org/api/states/all'
-        + '?lamin='+southWest.lat()
-        + '&lomin='+southWest.lng()
-        + '&lamax='+northEast.lat()
-        + '&lomax='+northEast.lng()
-        // + '?extended=false'
+          + '?lamin='+southWest.lat()
+          + '&lomin='+southWest.lng()
+          + '&lamax='+northEast.lat()
+          + '&lomax='+northEast.lng()
       this.updatePlanes(url)
     }
-  },
-  computed: {
-    ...vuex.mapGetters(['planes']),
   },
   mounted: function () {
     window.setInterval(() => {

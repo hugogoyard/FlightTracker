@@ -4,9 +4,10 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+var previousTimestamp = null;
+
 const state = {
   planes: [],
-  previousTimestamp: null,
 }
 
 const mutations = {
@@ -17,7 +18,6 @@ const mutations = {
 
 const getters = {
   planes: state => state.planes,
-  previousTimestamp: state => state.previousTimestamp,
 }
 
 const actions = {
@@ -28,8 +28,8 @@ const actions = {
     xhr.send()
     xhr.onload = function() {
       let obj = xhr.response;
-      if (state.previousTimestamp !== obj['time'] && state.previousTimestamp <= obj['time']) {
-        state.previousTimestamp = obj['time']
+      if (previousTimestamp !== obj['time'] && previousTimestamp <= obj['time']) {
+        previousTimestamp = obj['time']
         state.planes.splice(0, state.planes.length)
         if (obj['states'] != null || typeof obj['states'] !== undefined) {
           for (let i = 0; i < obj['states'].length; i++) {
