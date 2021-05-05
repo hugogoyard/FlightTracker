@@ -9,7 +9,7 @@
           fillOpacity: 0.1,
           strokeOpacity: 0
         }"
-        @click="setSelected(null)"
+        @click="selectAircraft(null)"
         :draggable="false"
         :editable="false"
     />
@@ -22,7 +22,7 @@
           fillOpacity: 0.1,
           strokeOpacity: 0
         }"
-        @click="setSelected(null)"
+        @click="selectAircraft(null)"
         :draggable="false"
         :editable="false"
     />
@@ -35,7 +35,7 @@
           fillOpacity: 0.1,
           strokeOpacity: 0
         }"
-        @click="setSelected(null)"
+        @click="selectAircraft(null)"
         :draggable="false"
         :editable="false"
     />
@@ -48,7 +48,7 @@
           fillOpacity: 0.1,
           strokeOpacity: 0
         }"
-        @click="setSelected(null)"
+        @click="selectAircraft(null)"
         :draggable="false"
         :editable="false"
     />
@@ -74,7 +74,7 @@ export default {
     }
   },
   methods: {
-    ...vuex.mapActions(['setSelected']),
+    ...vuex.mapActions(['selectAircraft']),
     getShadowRadiusFromAngle: function(angle) {
       var shadow_radius =  this.earth_radius_meters * Math.PI * 0.5;
       var twilight_dist = ((this.earth_radius_meters * 2 * Math.PI) / 360) * angle;

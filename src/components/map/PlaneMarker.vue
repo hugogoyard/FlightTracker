@@ -5,6 +5,7 @@
         :key="plane[0]"
         :position="{lat: parseFloat(plane[6]), lng: parseFloat(plane[5])}"
         :clickable="true"
+        @click="selectAircraft(plane)"
         :title="plane[1]"
         :icon="{
           url: getIconOrientedUrl(plane[10]),
@@ -20,6 +21,7 @@ import { iconManager } from "../../assets/map/markerIcon";
 export default {
   name: "PlaneMarker",
   methods: {
+    ...vuex.mapActions(['selectAircraft']),
     getIconOrientedUrl(angle) {
       return iconManager.getIconOrientedUrl(angle)
     },

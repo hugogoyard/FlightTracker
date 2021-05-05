@@ -8,16 +8,21 @@ var previousTimestamp = null;
 
 const state = {
   planes: [],
+  selectedAircraft: null,
 }
 
 const mutations = {
   ADD_PLANE(state, plane){
     state.planes.push(plane)
   },
+  SET_SELECTED(state, plane) {
+    state.selectedAircraft = plane
+  }
 }
 
 const getters = {
   planes: state => state.planes,
+  selectedAircraft: state => state.selectedAircraft,
 }
 
 const actions = {
@@ -33,12 +38,18 @@ const actions = {
         state.planes.splice(0, state.planes.length)
         if (obj['states'] != null || typeof obj['states'] !== undefined) {
           for (let i = 0; i < obj['states'].length; i++) {
+            if (state.selectedAircraft !== null && obj['states'][i][0] === state.selectedAircraft[0]){
+              store.commit('SET_SELECTED', obj['states'][i])
+            }
             store.commit('ADD_PLANE', obj['states'][i])
           }
         }
       }
     }
   },
+  selectAircraft: (store, aircraft) => {
+    store.commit('SET_SELECTED', aircraft)
+  }
 }
 
 export default new Vuex.Store({

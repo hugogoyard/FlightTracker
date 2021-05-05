@@ -5,10 +5,12 @@
       ref="map"
       :center="{ lat: 46, lng: 2 }"
       :options="option"
+      @click="selectAircraft(null)"
     >
       <plane-marker></plane-marker>
       <night-overlays></night-overlays>
     </GmapMap>
+    <aircraft-info></aircraft-info>
   </div>
 </template>
 <script>
@@ -18,12 +20,14 @@ import vuex from "vuex";
 COMPONENTS
  */
 import PlaneMarker from "../components/map/PlaneMarker";
-import nightOverlays from "../components/map/nightOverlays";
+import NightOverlays from "../components/map/NightOverlays";
+import AircraftInfo from "../components/info/AircraftInfo";
 export default {
   name: 'Home',
   components: {
+    AircraftInfo,
     PlaneMarker,
-    nightOverlays,
+    NightOverlays,
   },
   data () {
     return {
@@ -56,7 +60,7 @@ export default {
     }
   },
   methods: {
-    ...vuex.mapActions(['updatePlanes']),
+    ...vuex.mapActions(['updatePlanes', 'selectAircraft']),
     changeUrl(northEast, southWest) {
       const url = 'https://opensky-network.org/api/states/all'
           + '?lamin='+southWest.lat()
@@ -84,7 +88,6 @@ export default {
 #home {
   width: 100vw;
   height: 100vh;
-  color: white;
 
   #map {
     width: 100%;
