@@ -6,9 +6,11 @@
       :center="{ lat: 46, lng: 2 }"
       :options="option"
       @click="selectAircraft(null)"
+      @drag="resize()"
+      @zoom_changed="resize()"
     >
-      <plane-marker></plane-marker>
       <night-overlays></night-overlays>
+      <plane-marker hidden></plane-marker>
     </GmapMap>
     <aircraft-info></aircraft-info>
   </div>
@@ -61,25 +63,30 @@ export default {
   },
   methods: {
     ...vuex.mapActions(['updatePlanes', 'selectAircraft']),
-    changeUrl(northEast, southWest) {
+    resize: function() {
+      console.log('resized')
+    },
+    changeUrl: function(northEast, southWest) {
       const url = 'https://opensky-network.org/api/states/all'
           + '?lamin='+southWest.lat()
           + '&lomin='+southWest.lng()
           + '&lamax='+northEast.lat()
           + '&lomax='+northEast.lng()
       this.updatePlanes(url)
-    }
+    },
+  },
+  computed: {
+    ...vuex.mapGetters(['selectedAircraft']),
   },
   mounted: function () {
+    this.$refs.map.$mapPromise.then((map) => {
+      this.map = map
+    });
     window.setInterval(() => {
-      this.$nextTick(() => {
-        this.$refs.map.$mapPromise.then((map) => {
-          var bounds = map.getBounds();
-          var screenNorthEast = bounds.getNorthEast(); // LatLng of the north-east screen corner
-          var screenSouthWest = bounds.getSouthWest(); // LatLng of the south-west screen corner
-          this.changeUrl(screenNorthEast, screenSouthWest)
-        });
-      })
+      var bounds = this.map.getBounds();
+      var screenNorthEast = bounds.getNorthEast(); // LatLng of the north-east screen corner
+      var screenSouthWest = bounds.getSouthWest(); // LatLng of the south-west screen corner
+      this.changeUrl(screenNorthEast, screenSouthWest)
     }, 10000)
   }
 }

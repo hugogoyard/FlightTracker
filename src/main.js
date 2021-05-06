@@ -12,6 +12,7 @@ Vue.use(vueGoogleMaps, {
     key: key,
     libraries: 'places',
   },
+  autobindAllEvents: true,
 })
 
 new Vue({

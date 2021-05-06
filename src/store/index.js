@@ -36,13 +36,15 @@ const actions = {
       if (previousTimestamp !== obj['time'] && previousTimestamp <= obj['time']) {
         previousTimestamp = obj['time']
         state.planes.splice(0, state.planes.length)
-        if (obj['states'] != null || typeof obj['states'] !== undefined) {
+        if (obj['states'] != null && obj['states'].length > 0) {
           for (let i = 0; i < obj['states'].length; i++) {
             if (state.selectedAircraft !== null && obj['states'][i][0] === state.selectedAircraft[0]){
               store.commit('SET_SELECTED', obj['states'][i])
             }
             store.commit('ADD_PLANE', obj['states'][i])
           }
+        }else {
+          xhr.onabort
         }
       }
     }

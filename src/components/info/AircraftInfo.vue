@@ -1,150 +1,152 @@
 <template>
-  <transition name="slide-right">
-    <div
-        class="ac-panel-wrapper ac-info-wrapper"
-        v-if="selectedAircraft != null"
-    >
-      <section class="aircraft-info">
-        <h2 v-if="selectedAircraft[1] !== null && selectedAircraft[1].length > 0">
-          {{ selectedAircraft[1].toUpperCase() }}
-        </h2>
-        <h2 v-else>
-          No callsign
-        </h2>
-        <a class="close-trigger" @click="selectAircraft(null)">
-          <img :src="require('../../assets/close-icon.svg')" alt="Close icon">
-        </a>
-      </section>
-      <section class="aircraft-sub-info">
-        <section>
-          <div class="aircraft-icon-panel">
-          <!--TODO-->
-          </div>
-          <div class="aircraft-wrapper">
-            <div class="row">
-              <div v-if="!!selectedAircraft[2]">
-                <span >Country of registration</span>
-                <span>
+  <div>
+    <transition name="slide-right">
+      <div
+          class="ac-panel-wrapper ac-info-wrapper"
+          v-if="selectedAircraft != null"
+      >
+        <section class="aircraft-info">
+          <h2 v-if="selectedAircraft[1] !== null && selectedAircraft[1].length > 0">
+            {{ selectedAircraft[1].toUpperCase() }}
+          </h2>
+          <h2 v-else>
+            No callsign
+          </h2>
+          <a class="close-trigger" @click="selectAircraft(null)">
+            <img :src="require('../../assets/close-icon.svg')" alt="Close icon">
+          </a>
+        </section>
+        <section class="aircraft-sub-info">
+          <section>
+            <div class="aircraft-icon-panel">
+              <!--TODO-->
+            </div>
+            <div class="aircraft-wrapper">
+              <div class="row">
+                <div v-if="!!selectedAircraft[2]">
+                  <span >Country of registration</span>
+                  <span>
                   {{ selectedAircraft[2] }}
                 </span>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
         </section>
-      </section>
-      <section class="aircraft-position">
-        <span class="section-name">Aircraft informations</span>
-        <section>
-          <div class="aircraft-icon-panel">
-          <!--TODO-->
-          </div>
-          <div class="aircraft-wrapper">
-            <div class="row">
-              <div>
-                <span>Ground Speed</span>
-                <span v-if="selectedAircraft[9] != null">
+        <section class="aircraft-position">
+          <span class="section-name">Aircraft informations</span>
+          <section>
+            <div class="aircraft-icon-panel">
+              <!--TODO-->
+            </div>
+            <div class="aircraft-wrapper">
+              <div class="row">
+                <div>
+                  <span>Ground Speed</span>
+                  <span v-if="selectedAircraft[9] != null">
                   {{ selectedAircraft[9] }} m/s
                 </span>
-                <span v-else>
+                  <span v-else>
                   N/A
                 </span>
-              </div>
-              <div class="--underline">
-                <span>Is on Tarmac</span>
-                <span v-if="selectedAircraft[8] === true" style="color: green">
+                </div>
+                <div class="--underline">
+                  <span>Is on Tarmac</span>
+                  <span v-if="selectedAircraft[8] === true" style="color: green">
                   Yes
                 </span>
-                <span v-else-if="selectedAircraft[8] === false" style="color: red">
+                  <span v-else-if="selectedAircraft[8] === false" style="color: red">
                   No
                 </span>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div>
-                <span>Baro Altitude</span>
-                <span v-if="selectedAircraft[7] !== null">
+              <div class="row">
+                <div>
+                  <span>Baro Altitude</span>
+                  <span v-if="selectedAircraft[7] !== null">
                   {{ selectedAircraft[7] }} m
                 </span>
-                <span v-else>
+                  <span v-else>
                   0 m
                 </span>
-              </div>
-              <div>
-                <span>Vertical speed</span>
-                <span v-if="selectedAircraft[11] !== null">
+                </div>
+                <div>
+                  <span>Vertical speed</span>
+                  <span v-if="selectedAircraft[11] !== null">
                   {{ selectedAircraft[11] }} m/s
                 </span>
-                <span v-else>
+                  <span v-else>
                   0 m/s
                 </span>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div>
-                <span>Geo Altitude</span>
-                <span v-if="selectedAircraft[13] !== null">
-                  {{ selectedAircraft[13] }}m
+              <div class="row">
+                <div>
+                  <span>Geo Altitude</span>
+                  <span v-if="selectedAircraft[13] !== null">
+                  {{ selectedAircraft[13] }} m
                 </span>
-                <span v-else>
+                  <span v-else>
                   N/A
                 </span>
-              </div>
-              <div>
-                <span>Track</span>
-                <span v-if="selectedAircraft[10] !== null">
-                  {{ selectedAircraft[10] }}°
+                </div>
+                <div>
+                  <span>Track</span>
+                  <span v-if="selectedAircraft[10] !== null">
+                  {{ selectedAircraft[10] }} °
                 </span>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
         </section>
-      </section>
-      <section class="aircraft-lat-and-long-and-com">
-        <span class="section-name">Aircraft position & communication</span>
-        <section>
-          <div class="aircraft-icon-panel">
-          <!--TODO-->
-          </div>
-          <div class="aircraft-wrapper">
-            <div class="row">
-              <div>
-                <span>Icao Address</span>
-                <span v-if="selectedAircraft[0] !== null">
+        <section class="aircraft-lat-and-long-and-com">
+          <span class="section-name">Aircraft position & communication</span>
+          <section>
+            <div class="aircraft-icon-panel">
+              <!--TODO-->
+            </div>
+            <div class="aircraft-wrapper">
+              <div class="row">
+                <div>
+                  <span>Icao Address</span>
+                  <span v-if="selectedAircraft[0] !== null">
                   {{ selectedAircraft[0].toUpperCase() }}
                 </span>
-                <span v-else>
+                  <span v-else>
                   N/A
                 </span>
-              </div>
-              <div>
-                <span>Squawk</span>
-                <span v-if="selectedAircraft[14] !== null">
+                </div>
+                <div>
+                  <span>Squawk</span>
+                  <span v-if="selectedAircraft[14] !== null">
                   {{ selectedAircraft[14] }}
                 </span>
-                <span v-else>
+                  <span v-else>
                   N/A
                 </span>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div>
-                <span>Latitude</span>
-                <span v-if="!!selectedAircraft[6]">
+              <div class="row">
+                <div>
+                  <span>Latitude</span>
+                  <span v-if="!!selectedAircraft[6]">
                   {{ selectedAircraft[6] }}
                 </span>
-              </div>
-              <div>
-                <span>Longitude</span>
-                <span v-if="!!selectedAircraft[5]">
+                </div>
+                <div>
+                  <span>Longitude</span>
+                  <span v-if="!!selectedAircraft[5]">
                   {{ selectedAircraft[5] }}
                 </span>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
         </section>
-      </section>
-    </div>
-  </transition>
+      </div>
+    </transition>
+  </div>
 </template>
 
 <script>

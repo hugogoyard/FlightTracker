@@ -7,7 +7,8 @@
         :options="{
           fillColor: '#000000',
           fillOpacity: 0.1,
-          strokeOpacity: 0
+          strokeOpacity: 0,
+          clickable: false
         }"
         @click="selectAircraft(null)"
         :draggable="false"
@@ -20,7 +21,8 @@
         :options="{
           fillColor: '#000000',
           fillOpacity: 0.1,
-          strokeOpacity: 0
+          strokeOpacity: 0,
+          clickable: false
         }"
         @click="selectAircraft(null)"
         :draggable="false"
@@ -33,7 +35,8 @@
         :options="{
           fillColor: '#000000',
           fillOpacity: 0.1,
-          strokeOpacity: 0
+          strokeOpacity: 0,
+          clickable: false
         }"
         @click="selectAircraft(null)"
         :draggable="false"
@@ -46,7 +49,8 @@
         :options="{
           fillColor: '#000000',
           fillOpacity: 0.1,
-          strokeOpacity: 0
+          strokeOpacity: 0,
+          clickable: false
         }"
         @click="selectAircraft(null)"
         :draggable="false"
@@ -136,7 +140,5 @@ export default {
   }
 }
 </script>
-
 <style scoped>
-
 </style>
