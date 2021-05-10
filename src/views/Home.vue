@@ -3,11 +3,11 @@
     <GmapMap
       id="map"
       ref="map"
-      :center="{ lat: 46, lng: 2 }"
+      :center="{lat: 46,lng: 2}"
       :options="option"
       @click="selectAircraft(null)"
-      @drag="resize()"
-      @zoom_changed="resize()"
+      @zoom_changed="updateUrl()"
+      @dragend="updateUrl()"
     >
       <night-overlays></night-overlays>
       <plane-marker hidden></plane-marker>
@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import { styles } from "../assets/map/mapStyle";
+import {styles} from "../map/mapStyle";
 import vuex from "vuex";
 /*
 COMPONENTS
@@ -24,6 +24,7 @@ COMPONENTS
 import PlaneMarker from "../components/map/PlaneMarker";
 import NightOverlays from "../components/map/NightOverlays";
 import AircraftInfo from "../components/info/AircraftInfo";
+
 export default {
   name: 'Home',
   components: {
@@ -33,10 +34,15 @@ export default {
   },
   data () {
     return {
+      url: 'https://opensky-network.org/api/states/all',
       map: null,
       option: {
+        center: {
+          lat: 46,
+          lng: 2
+        },
         minZoom: 2,
-        zoom: 6,
+        zoom: 8,
         tilt: 0,
         backgroundColor: '#121415',
         zoomControl: false,
@@ -62,17 +68,32 @@ export default {
     }
   },
   methods: {
-    ...vuex.mapActions(['updatePlanes', 'selectAircraft']),
-    resize: function() {
-      console.log('resized')
+    ...vuex.mapActions(['updatePlanes', 'selectAircraft', 'setMapZoom']),
+    updateUrl: function() {
+      var mapZoom = this.map.getZoom()
+      this.setMapZoom(mapZoom)
+      var mapCenter = this.map.getCenter()
+      var mapCenterLat = mapCenter.lat().toFixed(2)
+      var mapCenterLng = mapCenter.lng().toFixed(2)
+      window.history.pushState("new_zoom", "Title", '/'+mapCenterLat+','+ mapCenterLng+'/'+mapZoom)
+      this.changeFetchUrl()
+
+      /**
+       * Save geolocation data in local storage
+       */
+      localStorage.setItem('map.latitude', mapCenter.lat());
+      localStorage.setItem('map.longitude', mapCenter.lng());
+      localStorage.setItem('map.zoom', mapZoom);
     },
-    changeUrl: function(northEast, southWest) {
-      const url = 'https://opensky-network.org/api/states/all'
-          + '?lamin='+southWest.lat()
-          + '&lomin='+southWest.lng()
-          + '&lamax='+northEast.lat()
-          + '&lomax='+northEast.lng()
-      this.updatePlanes(url)
+    changeFetchUrl: function() {
+      if (typeof this.map.getBounds() != 'undefined' && this.map != null) {
+        var bounds = this.map.getBounds().toJSON();
+        this.url = 'https://opensky-network.org/api/states/all'
+            + '?lamin='+bounds.south
+            + '&lomin='+bounds.west
+            + '&lamax='+bounds.north
+            + '&lomax='+bounds.east
+      }
     },
   },
   computed: {
@@ -81,14 +102,20 @@ export default {
   mounted: function () {
     this.$refs.map.$mapPromise.then((map) => {
       this.map = map
+      if (localStorage.getItem('map.zoom')){
+        this.option.zoom = parseInt(localStorage.getItem('map.zoom'))
+      }
+      if (localStorage.getItem('map.latitude') && localStorage.getItem('map.longitude')) {
+        var mapCenterLat = parseFloat(localStorage.getItem('map.latitude'))
+        var mapCenterLng = parseFloat(localStorage.getItem('map.longitude'))
+        this.option.center.lat = mapCenterLat
+        this.option.center.lng = mapCenterLng
+      }
     });
     window.setInterval(() => {
-      var bounds = this.map.getBounds();
-      var screenNorthEast = bounds.getNorthEast(); // LatLng of the north-east screen corner
-      var screenSouthWest = bounds.getSouthWest(); // LatLng of the south-west screen corner
-      this.changeUrl(screenNorthEast, screenSouthWest)
+      this.updatePlanes(this.url)
     }, 10000)
-  }
+  },
 }
 </script>
 <style lang="scss">
